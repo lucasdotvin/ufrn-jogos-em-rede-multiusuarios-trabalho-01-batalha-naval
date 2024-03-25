@@ -60,6 +60,9 @@ func runMigrations(db *sql.DB) error {
 			updated_at DATETIME DEFAULT NULL,
 			started_at DATETIME DEFAULT NULL
 		);
+
+		CREATE INDEX IF NOT EXISTS idx_rooms_player_1_uuid ON rooms (player_1_uuid);
+		CREATE INDEX IF NOT EXISTS idx_rooms_player_2_uuid ON rooms (player_2_uuid);
 	`)
 
 	if err != nil {
