@@ -1,43 +1,55 @@
 package entity
 
+import "errors"
+
 type Ship string
 
 const (
-	ShipCarrier    Ship = "carrier"
+	ShipDestroyer  Ship = "destroyer"
 	ShipBattleship Ship = "battleship"
 	ShipCruiser    Ship = "cruiser"
 	ShipSubmarine  Ship = "submarine"
 )
 
-type ShipOrientation string
-
-const (
-	ShipOrientationHorizontal ShipOrientation = "horizontal"
-	ShipOrientationVertical   ShipOrientation = "vertical"
+var (
+	UnknownShipError = errors.New("unknown ship")
 )
 
-type ShipPosition struct {
-	X int
-	Y int
-}
-
-type ShipPlacement struct {
-	Ship        Ship            `json:"ship"`
-	Orientation ShipOrientation `json:"orientation"`
-	Position    ShipPosition    `json:"position"`
-}
-
 var (
-	ShipAmounts = map[Ship]int{
-		ShipCarrier:    2,
-		ShipBattleship: 2,
+	AmountByShip = map[Ship]int{
+		ShipDestroyer:  2,
+		ShipBattleship: 1,
 		ShipCruiser:    1,
 		ShipSubmarine:  3,
 	}
-	ShipSizes = map[Ship]int{
-		ShipCarrier:    4,
-		ShipBattleship: 3,
-		ShipCruiser:    2,
+	SizeByShip = map[Ship]int{
+		ShipDestroyer:  2,
+		ShipBattleship: 4,
+		ShipCruiser:    3,
 		ShipSubmarine:  1,
 	}
+	TotalShipsSize = 2*2 + 4 + 3 + 3*1
 )
+
+func ParseShip(s string) (Ship, error) {
+	switch s {
+	case "destroyer":
+		return ShipDestroyer, nil
+	case "battleship":
+		return ShipBattleship, nil
+	case "cruiser":
+		return ShipCruiser, nil
+	case "submarine":
+		return ShipSubmarine, nil
+	default:
+		return "", UnknownShipError
+	}
+}
+
+func (s Ship) Amount() int {
+	return AmountByShip[s]
+}
+
+func (s Ship) Size() int {
+	return SizeByShip[s]
+}
